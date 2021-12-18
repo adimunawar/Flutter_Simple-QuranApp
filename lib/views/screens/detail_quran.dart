@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_player/model/quran.dart';
 import 'package:flutter_audio_player/provider/quran_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class DetailQuran extends StatefulWidget {
@@ -18,12 +19,29 @@ class _DetailQuranState extends State<DetailQuran> {
     final provider = Provider.of<QuranProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.quran.asma!),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 18,
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        title: Text(
+          widget.quran.asma!,
+          style: const TextStyle(color: Colors.black),
+        ),
         // ignore: prefer_const_literals_to_create_immutables
         actions: [
           Row(
             children: [
-              const Text("Translate"),
+              Text(
+                "Translate",
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
               Checkbox(
                   value: isShowTranlate,
                   onChanged: (val) {
@@ -44,17 +62,21 @@ class _DetailQuranState extends State<DetailQuran> {
             : Column(
                 children: [
                   if (widget.quran.nama != "Al Fatihah")
-                    const Text(
+                    Text(
                       "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ",
-                      style: TextStyle(fontSize: 16),
+                      style: GoogleFonts.mirza(
+                          fontSize: 20, fontWeight: FontWeight.w600),
                     ),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: provider.verses
                             .map((e) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
+                                  padding: const EdgeInsets.only(bottom: 12),
                                   child: Column(
                                     // crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -62,7 +84,7 @@ class _DetailQuranState extends State<DetailQuran> {
                                         alignment: Alignment.centerRight,
                                         child: Text(
                                           e.text!.arab!,
-                                          style: const TextStyle(fontSize: 16),
+                                          style: const TextStyle(fontSize: 20),
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
@@ -73,9 +95,9 @@ class _DetailQuranState extends State<DetailQuran> {
                                         Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              e.translation!.en!,
-                                              style:
-                                                  const TextStyle(height: 1.5),
+                                              e.translation!.id!,
+                                              style: GoogleFonts.poppins(
+                                                  height: 1.5),
                                             ))
                                     ],
                                   ),

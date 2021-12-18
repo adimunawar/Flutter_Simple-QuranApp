@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_player/provider/quran_provider.dart';
 import 'package:flutter_audio_player/views/screens/detail_quran.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class QuranList extends StatefulWidget {
@@ -12,84 +13,136 @@ class QuranList extends StatefulWidget {
 }
 
 class _QuranListState extends State<QuranList> {
+  ScrollController? scrollController;
+  bool isShowSearch = true;
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    scrollController!.addListener(() {
+      if (scrollController!.offset <=
+              scrollController!.position.minScrollExtent &&
+          !scrollController!.position.outOfRange) {
+        setState(() {
+          isShowSearch = true;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<QuranProvider>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('List ayat'),
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              size: 18,
+            ),
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          shadowColor: Colors.black12,
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: Text(
+            'Al Quran',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Consumer<QuranProvider>(builder: (context, data, _) {
               return Column(
                 children: [
-                  TextField(
-                    controller: provider.quranController,
-                    onChanged: (val) => provider.searchQuranSink.add(val),
-                    decoration: InputDecoration(
-                      hintText: 'Serach surah..',
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 10.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          provider.quranController.clear();
-                          provider.searchQuranSink.add(
-                            provider.quranController.text.trim(),
-                          );
-                        },
-                        icon: (provider.quranController.text != "")
-                            ? Icon(Icons.close)
-                            : Icon(Icons.search),
+                  if (isShowSearch)
+                    TextField(
+                      controller: provider.quranController,
+                      onChanged: (val) => provider.searchQuranSink.add(val),
+                      decoration: InputDecoration(
+                        hintText: 'Search.',
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 10.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            provider.quranController.clear();
+                            provider.searchQuranSink.add(
+                              provider.quranController.text.trim(),
+                            );
+                          },
+                          icon: (provider.quranController.text != "")
+                              ? Icon(Icons.close)
+                              : Icon(Icons.search),
+                        ),
                       ),
                     ),
-                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: data.listAyat
-                            .map((e) => InkWell(
-                                  onTap: () {
-                                    Provider.of<QuranProvider>(context,
-                                            listen: false)
-                                        .getVerses(int.tryParse(e.nomor!)!);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => DetailQuran(
-                                                  quran: e,
-                                                )));
-                                  },
-                                  child: Card(
-                                    color: data.listAyat.indexOf(e) % 2 == 0
-                                        ? Colors.orange[50]
-                                        : Colors.white,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (val) {
+                        if (val is ScrollStartNotification) {
+                          setState(() {
+                            isShowSearch = false;
+                          });
+                        }
+                        return true;
+                      },
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: data.listAyat
+                              .map((e) => InkWell(
+                                    onTap: () {
+                                      Provider.of<QuranProvider>(context,
+                                              listen: false)
+                                          .getVerses(int.tryParse(e.nomor!)!);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => DetailQuran(
+                                                    quran: e,
+                                                  )));
+                                    },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                          vertical: 8),
+                                      child: Column(
                                         children: [
-                                          Text(
-                                            e.nama!,
-                                            style: TextStyle(fontSize: 16),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                e.nama!,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 14),
+                                              ),
+                                              Text(
+                                                e.asma!,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 20),
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ],
                                           ),
-                                          Text(e.asma!,
-                                              style: TextStyle(fontSize: 18)),
+                                          Divider()
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ))
-                            .toList(),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
                   ),
