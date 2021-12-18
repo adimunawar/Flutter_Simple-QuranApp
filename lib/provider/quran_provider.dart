@@ -8,6 +8,7 @@ import 'package:flutter_audio_player/services/quran_services.dart';
 class QuranProvider with ChangeNotifier {
   List<Quran> _data = [];
   List<Quran> get quran => _data;
+  bool isLoading = false;
 
   final List<Verse> verses = [];
 
@@ -21,14 +22,18 @@ class QuranProvider with ChangeNotifier {
   }
 
   Future<void> getVerses(int surah) async {
-    try {
-      List<Verse> datas = await QuranServices.getAyatv2(surah);
-      verses.clear();
-      verses.addAll(datas);
-      notifyListeners();
-    } catch (e) {
-      print(e);
-      notifyListeners();
-    }
+    isLoading = true;
+    notifyListeners();
+    await QuranServices.getAyatv2(surah).then((value) {
+      if (value.isNotEmpty) {
+        verses.clear();
+        verses.addAll(value);
+        isLoading = false;
+        notifyListeners();
+      } else {
+        isLoading = false;
+        notifyListeners();
+      }
+    });
   }
 }

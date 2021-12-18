@@ -17,7 +17,6 @@ class QuranServices {
       List<Quran> surahs =
           (data['hasil'] as Iterable).map((e) => Quran.fromJson(e)).toList();
       _result.addAll(surahs);
-      // print(surahs);
       return _result;
     } else {
       return _result;
@@ -58,7 +57,6 @@ class QuranServices {
           .toList();
       _result.addAll(ayats);
       // ignore: avoid_print
-      print(_result);
       return _result;
     } else {
       return _result;
