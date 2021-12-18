@@ -41,38 +41,50 @@ class _DetailQuranState extends State<DetailQuran> {
         width: double.infinity,
         child: provider.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: provider.verses
-                      .map((e) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Column(
-                              // crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    e.text!.arab!,
-                                    style: const TextStyle(fontSize: 16),
-                                    textAlign: TextAlign.end,
+            : Column(
+                children: [
+                  if (widget.quran.nama != "Al Fatihah")
+                    const Text(
+                      "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: provider.verses
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Column(
+                                    // crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          e.text!.arab!,
+                                          style: const TextStyle(fontSize: 16),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      if (isShowTranlate)
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              e.translation!.en!,
+                                              style:
+                                                  const TextStyle(height: 1.5),
+                                            ))
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                if (isShowTranlate)
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        e.translation!.en!,
-                                        style: const TextStyle(height: 1.5),
-                                      ))
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
       ),
     );
