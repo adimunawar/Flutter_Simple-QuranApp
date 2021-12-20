@@ -44,19 +44,17 @@ class _QuranListState extends State<QuranList> {
               size: 18,
             ),
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
           shadowColor: Colors.black12,
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.pink,
           centerTitle: true,
           title: Text(
             'Al Quran',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
         ),
         body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: EdgeInsets.symmetric(
+                horizontal: 20, vertical: isShowSearch == true ? 20 : 0),
             child: Consumer<QuranProvider>(builder: (context, data, _) {
               return Column(
                 children: [

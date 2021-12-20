@@ -26,13 +26,13 @@ class _DetailQuranState extends State<DetailQuran> {
           child: const Icon(
             Icons.arrow_back_ios,
             size: 18,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.white,
+
         title: Text(
           widget.quran.asma!,
-          style: const TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.white),
         ),
         // ignore: prefer_const_literals_to_create_immutables
         actions: [
@@ -40,9 +40,11 @@ class _DetailQuranState extends State<DetailQuran> {
             children: [
               Text(
                 "Translate",
-                style: GoogleFonts.poppins(color: Colors.black),
+                style: GoogleFonts.poppins(color: Colors.white),
               ),
               Checkbox(
+                  activeColor: Colors.white,
+                  checkColor: Colors.pink,
                   value: isShowTranlate,
                   onChanged: (val) {
                     setState(() {
@@ -68,7 +70,7 @@ class _DetailQuranState extends State<DetailQuran> {
                           fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   const SizedBox(
-                    height: 12,
+                    height: 20,
                   ),
                   Expanded(
                     child: SingleChildScrollView(
